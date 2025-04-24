@@ -89,4 +89,68 @@ const router = express.Router();
   });
 
 
+
+  router.get('/', async (req, res) => {
+    try {
+      // Pagination parameters
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const offset = (page - 1) * limit;
+  
+      // Validasi input numerik
+      if (isNaN(page) || isNaN(limit)) {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid pagination parameters"
+        });
+      }
+  
+      // Query data dengan pagination
+      const [movies] = await koneksi.query(
+        `SELECT 
+          id, 
+          judul, 
+          sinopsis, 
+          tahun_rilis, 
+          thema, 
+          genre, 
+          studio, 
+          type, 
+          episode, 
+          durasi, 
+          rating, 
+          cover_url 
+        FROM movies 
+        LIMIT ? OFFSET ?`,
+        [limit, offset]
+      );
+  
+      // Query total data
+      const [totalResult] = await koneksi.query(
+        "SELECT COUNT(*) AS total FROM movies"
+      );
+      const total = totalResult[0].total;
+  
+      res.json({
+        success: true,
+        data: {
+          movies,
+          pagination: {
+            current_page: page,
+            total_pages: Math.ceil(total / limit),
+            total_items: total,
+            items_per_page: limit
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Server Error:', error);
+      res.status(500).json({
+        success: false,
+        error: "Internal Server Error"
+      });
+    }
+  });
+
+
 module.exports = router;
