@@ -18,6 +18,9 @@ const router = express.Router();
             body('sinopsis').trim().notEmpty().withMessage('Sinopsis tidak boleh kosong'),
             body('tahun_rilis').trim().notEmpty().isLength({ min: 4, max: 4 }).withMessage('Tahun rilis harus 4 digit'),
             body('episode').trim().notEmpty().isInt({ min: 1 }).withMessage('masukan angka episode yang valid'),
+            body('thema').trim().notEmpty().withMessage('Thema tidak boleh kosong'),
+            body('genre').trim().notEmpty().withMessage('Genre tidak boleh kosong'),
+            body('studio').trim().notEmpty().withMessage('Studio tidak boleh kosong'),
             body('durasi').trim().notEmpty().isInt({ min: 1 }).withMessage('masukan angka durasi yang valid'),
             body('type').trim().notEmpty().isIn(['TV', 'Movie', 'ONA', 'OVA']).withMessage('Type harus valid (TV, Movie, ONA, OVA)'),
             body('rating').trim().notEmpty().isIn(['G', 'PG', 'PG-13', 'R']).withMessage('Type harus valid (G, PG, PG-13, R)'),
@@ -51,12 +54,15 @@ const router = express.Router();
   
       // Simpan data ke database
       const [result] = await koneksi.query(
-        `INSERT INTO movies (judul, sinopsis, tahun_rilis, type, episode, durasi, rating, cover_url, delete_hash) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO movies (judul, sinopsis, tahun_rilis, thema, genre, studio, type, episode, durasi, rating, cover_url, delete_hash) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           req.body.judul,
           req.body.sinopsis,
           req.body.tahun_rilis,
+          req.body.thema,
+          req.body.genre,
+          req.body.studio,
           req.body.type,
           req.body.episode,
           req.body.durasi,
