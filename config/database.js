@@ -6,7 +6,7 @@ const koneksi = mysql.createPool({
   port: 3306,
   user: 'root',
   password: 'dedeari123',
-  database: 'database_film',
+  database: 'database_aplikasi_film',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
