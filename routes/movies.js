@@ -153,4 +153,51 @@ const router = express.Router();
   });
 
 
+  router.get('/:id', async (req, res) => {
+    try {
+
+  
+      // Query data dengan pagination
+      const [movies] = await koneksi.query(
+        `SELECT 
+          id, 
+          judul, 
+          sinopsis, 
+          tahun_rilis, 
+          thema, 
+          genre, 
+          studio, 
+          type, 
+          episode, 
+          durasi, 
+          rating, 
+          cover_url 
+        FROM movies 
+        WHERE id = ?`,
+        [req.params.id]
+      );
+
+  
+      // Query total data
+      const [totalResult] = await koneksi.query(
+        "SELECT COUNT(*) AS total FROM movies"
+      );
+      const total = totalResult[0].total;
+  
+      res.json({
+        success: true,
+        data: {
+          movies
+        }
+      });
+    } catch (error) {
+      console.error('Server Error:', error);
+      res.status(500).json({
+        success: false,
+        error: "Internal Server Error"
+      });
+    }
+  });
+
+
 module.exports = router;
