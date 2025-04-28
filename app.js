@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const koneksi = require('./config/database');
 const moviesRouter = require('./routes/movies');
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 // set body parser
 
 app.use(express.json());
